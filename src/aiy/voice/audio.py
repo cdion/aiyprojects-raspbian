@@ -350,8 +350,9 @@ class Recorder:
         self._done.set()
 
     def join(self):
-        self._started.wait()
-        self._process.wait()
+        if self._process:
+            self._started.wait()
+            self._process.wait()
 
 
 
@@ -372,8 +373,9 @@ class Player:
         return self._process
 
     def join(self):
-        self._started.wait()
-        self._process.wait()
+        if self._process:
+            self._started.wait()
+            self._process.wait()
 
 
 class FilePlayer(Player):
@@ -413,7 +415,7 @@ class BytesPlayer(Player):
             device: The PCM device name. Leave as ``default`` to use the default ALSA soundcard.
 
         Returns:
-            A closure with an inner function ``push()`` that accepts the byte data. 
+            A closure with an inner function ``push()`` that accepts the byte data.
         """
         process = self._popen(aplay(fmt=fmt, filetype='raw', device=device), stdin=subprocess.PIPE)
 
